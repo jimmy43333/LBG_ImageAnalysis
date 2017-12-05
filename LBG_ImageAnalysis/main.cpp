@@ -12,52 +12,57 @@
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 #include "CodeBookTrain.h"
+#include "readRawfile.h"
 using namespace std;
 using namespace cv;
 
-Mat readRawfile(const char* filename,int width,int height){
-    Mat outputimage;
-    //read the raw file
-    FILE *fp = NULL;
-    char *imagedata = NULL;
-    int IMAGE_WIDTH = width;
-    int IMAGE_HEIGHT = height;
-    int framesize = IMAGE_WIDTH * IMAGE_HEIGHT;
-    //Open raw Bayer image.
-    fp = fopen(filename, "rb");
-    if(!fp){
-        cout << "read file failure";
-        return outputimage;
-    }
-    //Memory allocation for bayer image data buffer.
-    imagedata = (char*) malloc (sizeof(char) * framesize);
-    //Read image data and store in buffer.
-    fread(imagedata, sizeof(char), framesize, fp);
-    //Create Opencv mat structure for image dimension. For 8 bit bayer, type should be CV_8UC1.
-    outputimage.create(IMAGE_HEIGHT, IMAGE_WIDTH, CV_8UC1);
-    memcpy(outputimage.data, imagedata, framesize);
-    free(imagedata);
-    fclose(fp);
-    return outputimage;
-}
+string int2str(int& i);
 
 int main(int argc, const char * argv[]) {
     vector< vector<vtype> > codebook;
-    Mat trainImg,trainImg2,trainImg3;
-    trainImg = readRawfile("/Users/TGsung/Desktop/lenna.raw",512,512);
-    trainImg2 = readRawfile("/Users/TGsung/Desktop/D23.raw",512,512);
-    trainImg3 = readRawfile("/Users/TGsung/Desktop/mandrill.raw",512,512);
+    vector<Mat> Img(6);
+    Img[0] = readRawfile("/Users/TGsung/Desktop/Dataset/880372.raw",128,128);
+    Img[1] = readRawfile("/Users/TGsung/Desktop/Dataset/881530.raw",128,128);
+    Img[2] = readRawfile("/Users/TGsung/Desktop/Dataset/882515.raw",128,128);
+    Img[3] = readRawfile("/Users/TGsung/Desktop/Dataset/891538.raw",128,128);
+    Img[4] = readRawfile("/Users/TGsung/Desktop/Dataset/891539.raw",128,128);
+    Img[5] = readRawfile("/Users/TGsung/Desktop/Dataset/892539.raw",128,128);
+    
     //Train with codebook
-    codebook = CodeBookTrain(codebook,trainImg);
-    codebook = CodeBookTrain(codebook,trainImg2);
-    codebook = CodeBookTrain(codebook,trainImg3);
+    codebook = CodeBookTrain(codebook,Img[0]);
+    codebook = CodeBookTrain(codebook,Img[1]);
+    codebook = CodeBookTrain(codebook,Img[2]);
+    codebook = CodeBookTrain(codebook,Img[3]);
+    
     //Output images with codebook
-    Mat img1;
+    Mat out;
     vector<int> compress;
-    compress = Encode(codebook,trainImg);
-    img1 = Decode(codebook,compress);
-    imwrite("/Users/TGsung/Desktop/01.jpg",img1);
-    imshow("window1",img1);
-    waitKey(0);
+    //print out the codebook
+    compress.resize(256);
+    for(int i=0;i<compress.size();i++){
+        compress[i] = i;
+    }
+    out = Decode(codebook,compress);
+    imwrite("/Users/TGsung/Desktop/codebook.jpg",out);
+    //print images
+    string name;
+    double psnr =0;
+    for(int i=0;i<Img.size();i++){
+        compress = Encode(codebook,Img[i]);
+        out = Decode(codebook,compress);
+        psnr = calpsnr(Img[i],out);
+        name = "/Users/TGsung/Desktop/0" + int2str(i) + ".jpg";
+        cout << psnr << endl;
+        imwrite(name,out);
+    }
+    
+    cout << "Down!" << endl;
     return 0;
+}
+
+string int2str(int &i) {
+    string s;
+    stringstream ss(s);
+    ss << i;
+    return ss.str();
 }

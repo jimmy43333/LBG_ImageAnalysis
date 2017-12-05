@@ -60,6 +60,7 @@
 		4D2F31291FCABE86001ECD82 /* libopencv_core.3.3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_core.3.3.0.dylib; path = ../../../../usr/local/lib/libopencv_core.3.3.0.dylib; sourceTree = "<group>"; };
 		4D2F312A1FCABE86001ECD82 /* libopencv_imgcodecs.3.3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_imgcodecs.3.3.0.dylib; path = ../../../../usr/local/lib/libopencv_imgcodecs.3.3.0.dylib; sourceTree = "<group>"; };
 		4D2F313C1FCAF314001ECD82 /* CodeBookTrain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CodeBookTrain.h; sourceTree = "<group>"; };
+		4D46AC031FD6DEF400E562A8 /* readRawfile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = readRawfile.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +129,7 @@
 			children = (
 				4D2F31131FCABE22001ECD82 /* main.cpp */,
 				4D2F313C1FCAF314001ECD82 /* CodeBookTrain.h */,
+				4D46AC031FD6DEF400E562A8 /* readRawfile.h */,
 			);
 			path = LBG_ImageAnalysis;
 			sourceTree = "<group>";

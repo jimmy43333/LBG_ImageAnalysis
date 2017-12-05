@@ -68,12 +68,12 @@ vector<vector<vtype>> CodeBookTrain(vector<vector<vtype>> &incodebook , Mat &inp
     vector<vector<vtype>> cluster;
     float D=0;                                 //the distortion to decided training is over or not
     float distortion = 1000;                   //the distortion of previous round
-    float threshold = 0.05;
-    int iteration = 5;                         //the max iteration of training
+    float threshold = 0.00000000000001;
+    int iteration = 20;                         //the max iteration of training
     
     //Create the training dataset of input image
-    for(int i =0;i <= 512-4;i=i+4){
-        for(int j=0;j <= 512-4;j=j+4){
+    for(int i =0;i <= input.rows-4;i=i+4){
+        for(int j=0;j <= input.cols-4;j=j+4){
             for(int k = 0; k < 4 ;k++){
                 for(int l=0;l< 4 ;l++){
                     tmp.push_back(input.at<uchar>(i+k,j+l));
@@ -196,4 +196,23 @@ Mat Decode(vector<vector<vtype>> &codebook , vector<int> &input){
     }
     return output;
 }
+//Calculate psnr
+double calpsnr(Mat& original, Mat& compress){
+    double psnr = 0;
+    double mse = 0 ;
+    int tmp = 0;
+    if(original.size() != compress.size()){
+        return 0;
+    }
+    for(int i =0;i<original.rows;i++){
+        for(int j = 0;j<original.cols;j++){
+            tmp = original.at<uchar>(i,j) - compress.at<uchar>(i,j);
+            mse += ( tmp * tmp );
+        }
+    }
+    mse = mse/(original.rows * original.cols);
+    psnr = 10 * log10((255*255)/mse);
+    return psnr;
+}
+
 #endif /* CodeBookTrain_h */
