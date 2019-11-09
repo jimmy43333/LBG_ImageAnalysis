@@ -19,6 +19,7 @@ using namespace cv;
 string int2str(int& i);
 
 int main(int argc, const char * argv[]) {
+    /*///
     vector< vector<vtype> > codebook;
     vector<Mat> Img(6);
     Img[0] = readRawfile("/Users/TGsung/Desktop/Dataset/880372.raw",128,128);
@@ -57,7 +58,18 @@ int main(int argc, const char * argv[]) {
     }
     
     cout << "Down!" << endl;
+    //*///
+    Mat image,Encode;
+    image = imread("/Users/TGsung/Desktop/111/JetColor512.tiff",0);
+    imwrite("/Users/TGsung/Desktop/111/Output/jete.jpg",image);
+    imshow("Display",image);
+    Encode = imread("/Users/TGsung/Desktop/111/roof.jpg",0);
+    double psnr;
+    psnr = calpsnr(image,Encode);
+    cout << psnr << endl;
+    waitKey(0);
     return 0;
+    
 }
 
 string int2str(int &i) {
